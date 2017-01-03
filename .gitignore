@@ -1,11 +1,6 @@
 vendor/
-node_modules/
 .env
 .idea/
 #bootstrap/compiled.php
 #app/storage/
 #bootstrap/cache/
-#.env.*.php
-#.env.php
-#rocketeer
-#.rocketeer/
