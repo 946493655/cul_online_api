@@ -1,0 +1,1 @@
+Lumen (5.2.9) (Laravel Components 5.2.*)
