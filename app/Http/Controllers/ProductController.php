@@ -60,7 +60,6 @@ class ProductController extends Controller
             $datas[$k]['createTime'] = $model->createTime();
             $datas[$k]['updateTime'] = $model->updateTime();
             $datas[$k]['cateName'] = $model->getCateName();
-            $datas[$k]['isTopName'] = $model->istop();
             $datas[$k]['isShowName'] = $model->isshow();
             $datas[$k]['linkTypes'] = $model->linkType();
         }
@@ -72,8 +71,6 @@ class ProductController extends Controller
             'data'  =>  $datas,
             'model' =>  [
                 'cates'     =>  $this->selfModel['cates'],
-                'isauths'   =>  $this->selfModel['isauths'],
-                'istops'    =>  $this->selfModel['istops'],
                 'isshows'   =>  $this->selfModel['isshows'],
                 'formats'   =>  $this->selfModel['formats'],
                 'formatNames'   =>  $this->selfModel['formatNames'],
@@ -112,7 +109,6 @@ class ProductController extends Controller
         $datas['createTime'] = $model->createTime();
         $datas['updateTime'] = $model->updateTime();
         $datas['cateName'] = $model->getCateName();
-        $datas['isTopName'] = $model->istop();
         $datas['isShowName'] = $model->isshow();
         $datas['linkTypes'] = $model->linkType();
         $rstArr = [
@@ -123,8 +119,55 @@ class ProductController extends Controller
             'data'  =>  $datas,
             'model' =>  [
                 'cates'     =>  $this->selfModel['cates'],
-                'isauths'   =>  $this->selfModel['isauths'],
-                'istops'    =>  $this->selfModel['istops'],
+                'isshows'   =>  $this->selfModel['isshows'],
+                'formats'   =>  $this->selfModel['formats'],
+                'formatNames'   =>  $this->selfModel['formatNames'],
+                'linkTypes'   =>  $this->selfModel['linkTypes'],
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 通过 id、uid 获取一条记录
+     */
+    public function getOneByUid()
+    {
+        $id = $_POST['id'];
+        $uid = $_POST['uid'];
+        if (!$id || !$uid) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数错误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = ProductModel::where('id',$id)->where('uid',$uid)->first();
+        if (!$model) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $datas = $this->objToArr($model);
+        $datas['createTime'] = $model->createTime();
+        $datas['updateTime'] = $model->updateTime();
+        $datas['cateName'] = $model->getCateName();
+        $datas['isShowName'] = $model->isshow();
+        $datas['linkTypes'] = $model->linkType();
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '获取成功！',
+            ],
+            'data'  =>  $datas,
+            'model' =>  [
+                'cates'     =>  $this->selfModel['cates'],
                 'isshows'   =>  $this->selfModel['isshows'],
                 'formats'   =>  $this->selfModel['formats'],
                 'formatNames'   =>  $this->selfModel['formatNames'],
@@ -144,8 +187,8 @@ class ProductController extends Controller
         $intro = $_POST['intro'];
         $uid = $_POST['uid'];
         $uname = $_POST['uname'];
-        $pid = $_POST['pid'];
-        if (!$name || !$cate || !$gif || !$uid || !$uname) {
+        $tempid = $_POST['tempid'];
+        if (!$name || !$cate || !$uid || !$uname || !$tempid) {
             $rstArr = [
                 'error' =>  [
                     'code'  =>  -1,
@@ -160,7 +203,7 @@ class ProductController extends Controller
             'intro' =>  $intro,
             'uid'   =>  $uid,
             'uname' =>  $uname,
-            'pid'   =>  $pid,
+            'tempid'   =>  $tempid,
             'created_at'    =>  time(),
         ];
         ProductModel::create($data);
@@ -182,13 +225,12 @@ class ProductController extends Controller
         $name = $_POST['name'];
         $genre = $_POST['genre'];
         $cate = $_POST['cate'];
-        $gif = $_POST['gif'];
         $intro = $_POST['intro'];
         $video_id = $_POST['video_id'];
         $uid = $_POST['uid'];
         $uname = $_POST['uname'];
-        $pid = $_POST['pid'];
-        if (!$name || !$genre || !$cate || !$gif || !$uid || !$uname) {
+        $tempid = $_POST['tempid'];
+        if (!$name || !$genre || !$cate|| !$uid || !$uname || !$tempid) {
             $rstArr = [
                 'error' =>  [
                     'code'  =>  -1,
@@ -211,15 +253,59 @@ class ProductController extends Controller
             'name'  =>  $name,
             'genre' =>  $genre,
             'cate'  =>  $cate,
-            'gif'   =>  $gif,
             'intro' =>  $intro,
             'video_id'  =>  $video_id,
             'uid'   =>  $uid,
-            'uname'   =>  $uname,
-            'pid'   =>  $pid,
+            'uname' =>  $uname,
+            'tempid'    =>  $tempid,
             'created_at'    =>  time(),
         ];
         ProductModel::create($data);
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 设置缩略图、视频链接
+     */
+    public function set2Link()
+    {
+        $thumb = $_POST['thumb'];
+        $linkType = $_POST['linkType'];
+        $videoLink = $_POST['link'];
+        $id = $_POST['id'];
+        $uid = $_POST['uid'];
+        if (!$thumb || !$linkType || !$videoLink || !$id || !$uid) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = ProductModel::where('id',$id)->where('uid',$uid)->first();
+        if (!$model) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $data = [
+            'thumb' =>  $thumb,
+            'linkType'  =>  $linkType,
+            'link'      =>  $videoLink,
+            'updated_at'    =>  time(),
+        ];
+        ProductModel::where('id',$id)->where('uid',$uid)->update($data);
         $rstArr = [
             'error' =>  [
                 'code'  =>  0,
@@ -305,6 +391,42 @@ class ProductController extends Controller
     }
 
     /**
+     * 通过 uid、id 销毁数据
+     */
+    public function forceDeleteBy2Id()
+    {
+        $uid = $_POST['uid'];
+        $id = $_POST['id'];
+        if (!$id || !$uid) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数错误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = ProductModel::where('id',$id)->where('uid',$uid)->first();
+        if (!$model) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        ProductModel::where('id',$id)->delete();
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
      * 获取 model 中数组
      */
     public function getModel()
@@ -316,8 +438,6 @@ class ProductController extends Controller
             ],
             'model' =>  [
                 'cates'     =>  $this->selfModel['cates'],
-                'isauths'   =>  $this->selfModel['isauths'],
-                'istops'    =>  $this->selfModel['istops'],
                 'isshows'   =>  $this->selfModel['isshows'],
                 'formats'   =>  $this->selfModel['formats'],
                 'formatNames'   =>  $this->selfModel['formatNames'],

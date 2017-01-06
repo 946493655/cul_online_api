@@ -26,9 +26,12 @@ $app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers'], functio
     $app->post('product/add', 'ProductController@store');
     $app->post('product/modify', 'ProductController@update');
     $app->post('product/show', 'ProductController@show');
+    $app->post('product/onebyuid', 'ProductController@getOneByUid');
     $app->post('product/isshow', 'ProductController@setIsShow');
     $app->post('product/delete', 'ProductController@forceDelete');
     $app->post('product/getmodel', 'ProductController@getModel');
+    $app->post('product/modify2link', 'ProductController@set2Link');
+    $app->post('product/deleteby2id', 'ProductController@forceDeleteBy2Id');
     //产品订单路由
     $app->post('order', 'OrderController@index');
     $app->post('order/add', 'OrderController@store');
@@ -41,7 +44,13 @@ $app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers'], functio
     $app->post('order/status', 'OrderController@setStatus');
     //平台发布的在线创作的产品模板
     $app->post('temp', 'TempProController@index');
+    $app->post('temp/add', 'TempProController@store');
+    $app->post('temp/modify2link', 'TempProController@set2Link');
+    $app->post('temp/modify', 'TempProController@update');
     $app->post('temp/show', 'TempProController@show');
+    $app->post('temp/isshow', 'TempProController@setIsShow');
+    $app->post('temp/delete', 'TempProController@forceDelete');
+    $app->post('temp/getone', 'TempProController@getOneByShow');
     $app->post('temp/getmodel', 'TempProController@getModel');
 });
 
