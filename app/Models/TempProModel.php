@@ -11,5 +11,5 @@ class TempProModel extends BaseModel
     protected $fillable = [
         'id','name','serial','cate','intro','thumb','linkType','link','isshow','created_at','updated_at',
     ];
-    //serial序列号：AE_ + 年月日时分秒 + 随机值
+    //serial序列号：AE_ + 年月日时分秒 + 10000的随机值
 }

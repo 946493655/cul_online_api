@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Temp\AttrModel;
+use App\Models\Temp\ConModel;
+use App\Models\Temp\LayerModel;
 use App\Models\TempProModel;
 
 class TempProController extends Controller
@@ -35,6 +38,46 @@ class TempProController extends Controller
                 'error' => [
                     'code'  =>  -2,
                     'msg'   =>  '未获取到数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        //整理数据
+        $datas = array();
+        foreach ($models as $k=>$model) {
+            $datas[$k] = $this->objToArr($model);
+            $datas[$k]['createTime'] = $model->createTime();
+            $datas[$k]['updateTime'] = $model->updateTime();
+            $datas[$k]['cateName'] = $model->getCateName();
+            $datas[$k]['linkTypeName'] = $model->getLinkTypeName();
+            $datas[$k]['isShowName'] = $model->isshow();
+        }
+        $rstArr = [
+            'error' => [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+            'data'  =>  $datas,
+            'model' =>  [
+                'cates' =>  $this->selfModel['cates'],
+                'linkTypes' =>  $this->selfModel['linkTypes'],
+                'isshows'   =>  $this->selfModel['isshows'],
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 获取所有模板
+     */
+    public function all()
+    {
+        $models = TempProModel::all();
+        if (!count($models)) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '没有数据！',
                 ],
             ];
             echo json_encode($rstArr);exit;
@@ -341,6 +384,89 @@ class TempProController extends Controller
                 'code'  =>  0,
                 'msg'   =>  '操作成功！',
             ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 清空表：只有九哥有权限
+     */
+    public function clearTable()
+    {
+        $adminName = $_POST['adminName'];
+        if (!$adminName || $adminName!='jiuge') {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $models = TempProModel::all();
+        if (!count($models)) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        TempProModel::truncate();
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 获取动画预览数据
+     */
+    public function getPreview()
+    {
+        $id = $_POST['id'];
+        if (!$id) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $layerModels = LayerModel::where('tempid',$id)->get();
+        if (!count($layerModels)) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $datas = array();
+        foreach ($layerModels as $k=>$layerModel) {
+            $datas[$k] = $this->objToArr($layerModel);
+            $datas[$k]['createTime'] = $layerModel->createTime();
+            $datas[$k]['updateTime'] = $layerModel->updateTime();
+            $datas[$k]['leftArr'] = $layerModel->getFrames(1) ?
+                $this->objToArr($layerModel->getFrames(1)) : [];
+            $datas[$k]['topArr'] = $layerModel->getFrames(2) ?
+                $this->objToArr($layerModel->getFrames(2)) : [];
+            $datas[$k]['opacityArr'] = $layerModel->getFrames(3) ?
+                $this->objToArr($layerModel->getFrames(3)) : [];
+        }
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+            'data'  =>  $datas,
+            'model' =>  [],
         ];
         echo json_encode($rstArr);exit;
     }

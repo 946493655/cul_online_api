@@ -52,29 +52,50 @@ $app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers'], functio
     $app->post('temp/delete', 'TempProController@forceDelete');
     $app->post('temp/getone', 'TempProController@getOneByShow');
     $app->post('temp/getmodel', 'TempProController@getModel');
+    $app->post('temp/cleartable', 'TempProController@clearTable');
+    $app->post('temp/all', 'TempProController@all');
+    $app->post('temp/getpreview', 'TempProController@getPreview');
 });
 
 
-//在线创作产品的过程
-$app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers\Product'], function () use ($app) {
-    //属性的路由
-    $app->post('attr', 'AttrController@index');
-    $app->post('attr/add', 'AttrController@store');
-    $app->post('attr/modify', 'AttrController@update');
-    $app->post('attr/show', 'AttrController@show');
-    $app->post('attr/isdel', 'AttrController@setDel');
-    $app->post('attr/delete', 'AttrController@forceDelete');
-    //内容路由
-    $app->post('con', 'ConController@index');
-    $app->post('con/add', 'AttrController@store');
-    $app->post('con/modify', 'AttrController@update');
+//产品模板的创作过程
+$app->group(['prefix' => 'api/v1/t', 'namespace'=>'App\Http\Controllers\Temp'], function () use ($app) {
     //动画设置路由
     $app->post('layer', 'LayerController@index');
+    $app->post('layer/show', 'LayerController@show');
     $app->post('layer/add', 'LayerController@store');
     $app->post('layer/modify', 'LayerController@update');
-    $app->post('layer/show', 'LayerController@show');
-    $app->post('layer/isdel', 'LayerController@setDel');
     $app->post('layer/delete', 'LayerController@forceDelete');
-    //属性的动画路由
-    $app->post('layerattr', 'LayerAttrController@index');
+    $app->post('layer/getmodel', 'LayerController@getModel');
+    //动画关键帧路由
+    $app->post('frame', 'FrameController@index');
+    $app->post('frame/add', 'FrameController@store');
+    $app->post('frame/modify', 'FrameController@update');
+    $app->post('frame/getmodel', 'FrameController@getModel');
+    $app->post('frame/getframesbytempid', 'FrameController@getFramesByTempid');
 });
+
+
+////在线创作产品的过程
+//$app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers\Product'], function () use ($app) {
+//    //属性的路由
+//    $app->post('attr', 'AttrController@index');
+//    $app->post('attr/add', 'AttrController@store');
+//    $app->post('attr/modify', 'AttrController@update');
+//    $app->post('attr/show', 'AttrController@show');
+//    $app->post('attr/isdel', 'AttrController@setDel');
+//    $app->post('attr/delete', 'AttrController@forceDelete');
+//    //内容路由
+//    $app->post('con', 'ConController@index');
+//    $app->post('con/add', 'AttrController@store');
+//    $app->post('con/modify', 'AttrController@update');
+//    //动画设置路由
+//    $app->post('layer', 'LayerController@index');
+//    $app->post('layer/add', 'LayerController@store');
+//    $app->post('layer/modify', 'LayerController@update');
+//    $app->post('layer/show', 'LayerController@show');
+//    $app->post('layer/isdel', 'LayerController@setDel');
+//    $app->post('layer/delete', 'LayerController@forceDelete');
+//    //属性的动画路由
+//    $app->post('layerattr', 'LayerAttrController@index');
+//});

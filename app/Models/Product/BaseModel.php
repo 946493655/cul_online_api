@@ -1,7 +1,9 @@
 <?php
 namespace App\Models\Product;
 
-class BaseModel extends \App\Models\BaseModel
+use App\Models\BaseModel as  Model;
+
+class BaseModel extends Model
 {
     /**
      * 产品创作的基础 model
