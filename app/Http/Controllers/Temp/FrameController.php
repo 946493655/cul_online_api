@@ -22,7 +22,7 @@ class FrameController extends BaseController
         $attr = $_POST['attr'];
 
         $layerModel = LayerModel::where('tempid',$tempid)->where('id',$layerid)->first();
-        if (!$layerModel || !array_key_exists($attr,$this->selfModel['attrs'])) {
+        if (!$layerModel) {
             $rstArr = [
                 'error' =>  [
                     'code'  =>  -1,
@@ -133,20 +133,44 @@ class FrameController extends BaseController
             ];
             echo json_encode($rstArr);exit;
         }
+        //判断关键帧重复
+        $frameModel = FrameModel::where('tempid',$tempid)
+            ->where('layerid',$layerid)
+            ->where('attr',$attr)
+            ->where('per',$per)
+            ->first();
+        if ($frameModel) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '有重复关键帧！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $time = time();
         $data = [
             'tempid'    =>  $tempid,
             'layerid'   =>  $layerid,
             'attr'      =>  $attr,
             'per'       =>  $per,
             'val'       =>  $val,
-            'created_at'    =>  time(),
+            'created_at'    =>  $time,
         ];
         FrameModel::create($data);
+        //获取刚插入的记录
+        $model = FrameModel::where($data)->first();
+        $datas = $this->objToArr($model);
+        $datas['createTime'] = $model->createTime();
+        $datas['updateTime'] = $model->updateTime();
+        $datas['getAttr'] = $model->getAttr();
+        $datas['getAttrName'] = $model->getAttrName();
         $rstArr = [
             'error' =>  [
                 'code'  =>  0,
                 'msg'   =>  '操作成功！',
             ],
+            'data' => $datas,
         ];
         echo json_encode($rstArr);exit;
     }
@@ -182,6 +206,38 @@ class FrameController extends BaseController
             ];
             FrameModel::where('id',$frame['id'])->update($data);
         }
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    public function forceDelete()
+    {
+        $id = $_POST['id'];
+        if (!$id) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = FrameModel::find($id);
+        if (!$model) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        FrameModel::where('id',$id)->delete();
         $rstArr = [
             'error' =>  [
                 'code'  =>  0,

@@ -42,6 +42,7 @@ class LayerController extends BaseController
             $datas[$k] = $this->objToArr($model);
             $datas[$k]['createTime'] = $model->createTime();
             $datas[$k]['updateTime'] = $model->updateTime();
+            $datas[$k]['tempName'] = $model->getTempName();
         }
         $rstArr = [
             'error' =>  [
@@ -82,6 +83,7 @@ class LayerController extends BaseController
         $datas = $this->objToArr($model);
         $datas['createTime'] = $model->createTime();
         $datas['updateTime'] = $model->updateTime();
+        $datas['tempName'] = $model->getTempName();
         $rstArr = [
             'error' =>  [
                 'code'  =>  0,
@@ -152,6 +154,8 @@ class LayerController extends BaseController
         $iscon = $_POST['iscon'];
         $text = $_POST['text'];
         $img = $_POST['img'];
+        $isbigbg = $_POST['isbigbg'];
+        $bigbg = $_POST['bigbg'];
         if (!$id || !$name) {
             $rstArr = [
                 'error' =>  [
@@ -183,6 +187,8 @@ class LayerController extends BaseController
             'iscolor'   =>  $iscolor,
             'color'     =>  $color,
             'fontsize'  =>  $fontsize,
+            'isbigbg'   =>  $isbigbg,
+            'bigbg'     =>  $bigbg,
         ];
         $conArr = [
             'iscon'     =>  $iscon,

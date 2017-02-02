@@ -13,6 +13,8 @@ class LayerModel extends BaseModel
     ];
 
     //动画名称a_name：系统自动添加，layer_ + 模板id_ + 10000的随机数
+    //属性attr：width，height，isborder，border1，border2，border3，isbg，bg，iscolor，color，fontsize，bigbg，
+    //内容con：iscon，text，img，
 
     /**
      * 旗下的关键帧
@@ -24,5 +26,14 @@ class LayerModel extends BaseModel
             ->where('attr',$attr)
             ->get();
         return count($models) ? $models : [];
+    }
+
+    /**
+     * 获取模板名称
+     */
+    public function getTempName()
+    {
+        $tempModel = LayerModel::find($this->tempid);
+        return $tempModel ? $tempModel->name : '';
     }
 }

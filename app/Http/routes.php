@@ -73,6 +73,7 @@ $app->group(['prefix' => 'api/v1/t', 'namespace'=>'App\Http\Controllers\Temp'], 
     $app->post('frame/modify', 'FrameController@update');
     $app->post('frame/getmodel', 'FrameController@getModel');
     $app->post('frame/getframesbytempid', 'FrameController@getFramesByTempid');
+    $app->post('frame/delete', 'FrameController@forceDelete');
 });
 
 
