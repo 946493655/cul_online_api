@@ -241,13 +241,13 @@ CREATE TABLE `temp_frame` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `tempid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '模板id',
   `layerid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '动画设置id',
-  `attr` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '属性选择：1水平距离，2垂直距离，3透明度',
+  `attr` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '属性选择：1水平距离，2垂直距离，3透明度，4旋转，5缩放',
   `per` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '动画点，单位%',
-  `val` varchar(50) NOT NULL DEFAULT '0' COMMENT '属性值',
+  `val` int(11) NOT NULL DEFAULT '0' COMMENT '属性值，单位（1、2=>px，3、5=>无，4=>deg）',
   `created_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='产品模板关键帧表';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='产品模板关键帧表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -256,7 +256,7 @@ CREATE TABLE `temp_frame` (
 
 LOCK TABLES `temp_frame` WRITE;
 /*!40000 ALTER TABLE `temp_frame` DISABLE KEYS */;
-INSERT INTO `temp_frame` VALUES (1,1,1,1,10,'30',1484720633,1484832697);
+INSERT INTO `temp_frame` VALUES (1,1,1,1,0,0,1484720633,1485957631),(8,1,1,1,100,500,1486011314,0),(9,1,1,3,0,0,1486207893,0),(10,1,1,3,100,100,1486208359,0);
 /*!40000 ALTER TABLE `temp_frame` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -275,7 +275,8 @@ CREATE TABLE `temp_layer` (
   `delay` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '开始延时秒数，单位秒s',
   `timelong` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '动画时长，单位秒(s)',
   `con` varchar(255) NOT NULL COMMENT '图层内容：iscon内容类型(1文字，2图片)，text文字，img图片链接',
-  `attr` varchar(1000) NOT NULL COMMENT '样式属性：宽width，高height，边框(isborder0无，1有；border1厚度；border3颜色)，背景色bg，文字颜色fontcolor，文字大小fontsize，位置垂直top，位置水平left',
+  `attr` varchar(1000) NOT NULL COMMENT '样式属性：宽width，高height，边框(isborder0无，1有；border1厚度；border3颜色)，背景色bg，文字颜色fontcolor，文字大小fontsize，大背景bigbg',
+  `isshow` tinyint(1) unsigned NOT NULL DEFAULT '2' COMMENT '动画中是否显示：1不显示，2显示',
   `created_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -288,7 +289,7 @@ CREATE TABLE `temp_layer` (
 
 LOCK TABLES `temp_layer` WRITE;
 /*!40000 ALTER TABLE `temp_layer` DISABLE KEYS */;
-INSERT INTO `temp_layer` VALUES (1,'动画测试',1,'layer_1_3553',0,3,'a:3:{s:5:\"iscon\";s:1:\"1\";s:4:\"text\";s:9:\"987654321\";s:3:\"img\";s:0:\"\";}','a:11:{s:5:\"width\";s:0:\"\";s:6:\"height\";s:0:\"\";s:8:\"isborder\";s:1:\"1\";s:7:\"border1\";s:1:\"1\";s:7:\"border2\";s:1:\"3\";s:7:\"border3\";s:7:\"#ff0000\";s:4:\"isbg\";s:1:\"1\";s:2:\"bg\";s:7:\"#ffffff\";s:7:\"iscolor\";s:1:\"1\";s:5:\"color\";s:7:\"#ff0000\";s:8:\"fontsize\";s:0:\"\";}',1484105370,1484646230);
+INSERT INTO `temp_layer` VALUES (1,'动画测试',1,'layer_1_3553',0,5,'','a:13:{s:5:\"width\";s:3:\"300\";s:6:\"height\";s:3:\"100\";s:8:\"isborder\";s:1:\"1\";s:7:\"border1\";s:1:\"1\";s:7:\"border2\";s:1:\"3\";s:7:\"border3\";s:7:\"#ff0000\";s:4:\"isbg\";s:1:\"1\";s:2:\"bg\";s:7:\"#ffffff\";s:7:\"iscolor\";s:1:\"1\";s:5:\"color\";s:7:\"#ff0000\";s:8:\"fontsize\";s:2:\"16\";s:7:\"isbigbg\";s:1:\"0\";s:5:\"bigbg\";s:7:\"#9a9a9a\";}',2,1484105370,1486178163);
 /*!40000 ALTER TABLE `temp_layer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -308,6 +309,7 @@ CREATE TABLE `temp_pro` (
   `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '缩略图',
   `linkType` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '视频链接类型：1Flash代码，2html代码，3通用代码，4其他网址链接',
   `link` varchar(255) NOT NULL COMMENT '预览视频链接',
+  `attr` varchar(255) NOT NULL COMMENT '背景，颜色值',
   `isshow` tinyint(1) unsigned NOT NULL DEFAULT '2' COMMENT '是否显示：1不显示，2显示',
   `created_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0',
@@ -321,7 +323,7 @@ CREATE TABLE `temp_pro` (
 
 LOCK TABLES `temp_pro` WRITE;
 /*!40000 ALTER TABLE `temp_pro` DISABLE KEYS */;
-INSERT INTO `temp_pro` VALUES (1,'模板测试','AE_20170107101552725',1,'测试测试','http://online.jiugewenhua.com/uploads/images/2017-01-07/5870a08cdad25.jpg',4,'https://baidu.com',2,1483755352,1483776140);
+INSERT INTO `temp_pro` VALUES (1,'模板测试','AE_20170107101552725',1,'测试测试','http://online.jiugewenhua.com/uploads/images/2017-02-05/589719c94c081.jpg',4,'https://le.com','',2,1483755352,1486298781);
 /*!40000 ALTER TABLE `temp_pro` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -334,4 +336,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-20 15:40:50
+-- Dump completed on 2017-02-05 22:23:21

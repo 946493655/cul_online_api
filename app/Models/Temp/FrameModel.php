@@ -14,10 +14,10 @@ class FrameModel extends BaseModel
 
     //key动画的属性名：
     protected $attrs = [
-        1=>'left','top','opacity',
+        1=>'left','top','opacity','rotate','scale',
     ];
     protected $attrNames = [
-        1=>'水平距离','垂直距离','透明度',
+        1=>'水平距离','垂直距离','透明度','旋转','缩放',
     ];
 
     public function getLayerName()

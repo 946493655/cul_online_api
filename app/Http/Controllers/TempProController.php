@@ -274,15 +274,13 @@ class TempProController extends Controller
     }
 
     /**
-     * 根据 id 更新模板的TempProduct的 thumb、linkType、link
+     * 根据 id 更新模板的TempProduct的 thumb
      */
-    public function set2Link()
+    public function setThumb()
     {
         $id = $_POST['id'];
         $thumb = $_POST['thumb'];
-        $linkType = $_POST['linkType'];
-        $link = $_POST['link'];
-        if (!$id || !$thumb || !$linkType || !$link) {
+        if (!$id || !$thumb) {
             $rstArr = [
                 'error' =>  [
                     'code'  =>  -1,
@@ -303,11 +301,94 @@ class TempProController extends Controller
         }
         $data = [
             'thumb'     =>  $thumb,
+            'updated_at'    =>  time(),
+        ];
+        TempProModel::where('id',$id)->update($data);
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 根据 id 更新模板的TempProduct的 linkType、link
+     */
+    public function setLink()
+    {
+        $id = $_POST['id'];
+        $linkType = $_POST['linkType'];
+        $link = $_POST['link'];
+        if (!$id || !$linkType || !$link) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = TempProModel::find($id);
+        if (!$model) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $data = [
             'linkType'  =>  $linkType,
             'link'      =>  $link,
             'updated_at'    =>  time(),
         ];
         TempProModel::where('id',$id)->update($data);
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 更新模板大背景
+     */
+    public function setAttr()
+    {
+        $id = $_POST['id'];
+        $isbg = $_POST['isbg'];
+        $bgcolor = $_POST['bgcolor'];
+        $bgimg = $_POST['bgimg'];
+        if (!$id) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = TempProModel::find($id);
+        if (!$model) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $data = [
+            'isbg'  =>  $isbg,
+            'bgcolor'   =>  $bgcolor,
+            'bgimg'     =>  $bgimg,
+        ];
+        TempProModel::where('id',$id)->update(['attr'=>serialize($data)]);
         $rstArr = [
             'error' =>  [
                 'code'  =>  0,
@@ -429,6 +510,7 @@ class TempProController extends Controller
     public function getPreview()
     {
         $id = $_POST['id'];
+        $isshow = $_POST['isshow'];
         if (!$id) {
             $rstArr = [
                 'error' =>  [
@@ -438,8 +520,12 @@ class TempProController extends Controller
             ];
             echo json_encode($rstArr);exit;
         }
-        $layerModels = LayerModel::where('tempid',$id)->get();
-        if (!count($layerModels)) {
+        $model = TempProModel::find($id);
+        $isShowArr = $isshow ? [$isshow] : [1,2];
+        $layerModels = LayerModel::where('tempid',$id)
+            ->whereIn('isshow',$isShowArr)
+            ->get();
+        if (!$model || !count($layerModels)) {
             $rstArr = [
                 'error' =>  [
                     'code'  =>  -2,
@@ -449,15 +535,21 @@ class TempProController extends Controller
             echo json_encode($rstArr);exit;
         }
         $datas = array();
+        $datas['temp'] = $this->objToArr($model);
+        $datas['temp']['createTime'] = $model->createTime();
+        $datas['temp']['updateTime'] = $model->updateTime();
         foreach ($layerModels as $k=>$layerModel) {
-            $datas[$k] = $this->objToArr($layerModel);
-            $datas[$k]['createTime'] = $layerModel->createTime();
-            $datas[$k]['updateTime'] = $layerModel->updateTime();
-            $datas[$k]['leftArr'] = $layerModel->getFrames(1) ?
+            $datas['layer'][$k] = $this->objToArr($layerModel);
+            $datas['layer'][$k]['createTime'] = $layerModel->createTime();
+            $datas['layer'][$k]['updateTime'] = $layerModel->updateTime();
+            $datas['layer'][$k]['con'] = $layerModel->getCons();
+            $datas['layer'][$k]['attr'] = $layerModel->getAttrs();
+            //关键帧属性
+            $datas['layer'][$k]['leftArr'] = $layerModel->getFrames(1) ?
                 $this->objToArr($layerModel->getFrames(1)) : [];
-            $datas[$k]['topArr'] = $layerModel->getFrames(2) ?
+            $datas['layer'][$k]['topArr'] = $layerModel->getFrames(2) ?
                 $this->objToArr($layerModel->getFrames(2)) : [];
-            $datas[$k]['opacityArr'] = $layerModel->getFrames(3) ?
+            $datas['layer'][$k]['opacityArr'] = $layerModel->getFrames(3) ?
                 $this->objToArr($layerModel->getFrames(3)) : [];
         }
         $rstArr = [

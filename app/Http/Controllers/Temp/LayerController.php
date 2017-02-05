@@ -18,6 +18,7 @@ class LayerController extends BaseController
     public function index()
     {
         $tempid = $_POST['tempid'];
+        $isshow = (isset($_POST['isshow'])&&$_POST['isshow'])?$_POST['isshow']:0;
         if (!$tempid) {
             $rstArr = [
                 'error' =>  [
@@ -27,7 +28,11 @@ class LayerController extends BaseController
             ];
             echo json_encode($rstArr);exit;
         }
-        $models = LayerModel::where('tempid',$tempid)->orderBy('delay','asc')->get();
+        $isShowArr = $isshow ? [$isshow] : [1,2];
+        $models = LayerModel::where('tempid',$tempid)
+            ->whereIn('isshow',$isShowArr)
+            ->orderBy('delay','asc')
+            ->get();
         if (!count($models)) {
             $rstArr = [
                 'error' =>  [
@@ -204,6 +209,42 @@ class LayerController extends BaseController
             'updated_at'    =>  time(),
         ];
         LayerModel::where('id',$id)->update($data);
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 设置动画层是否显示
+     */
+    public function setIsShow()
+    {
+        $id = $_POST['id'];
+        $isshow = $_POST['isshow'];
+        if (!$id || !$isshow) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = LayerModel::find($id);
+        if (!$model) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        LayerModel::where('id',$id)->update(['isshow'=>$isshow, 'updated_at'=>time()]);
         $rstArr = [
             'error' =>  [
                 'code'  =>  0,

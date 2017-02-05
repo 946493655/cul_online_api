@@ -45,7 +45,8 @@ $app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers'], functio
     //平台发布的在线创作的产品模板
     $app->post('temp', 'TempProController@index');
     $app->post('temp/add', 'TempProController@store');
-    $app->post('temp/modify2link', 'TempProController@set2Link');
+    $app->post('temp/setthumb', 'TempProController@setThumb');
+    $app->post('temp/setlink', 'TempProController@setLink');
     $app->post('temp/modify', 'TempProController@update');
     $app->post('temp/show', 'TempProController@show');
     $app->post('temp/isshow', 'TempProController@setIsShow');
@@ -55,6 +56,7 @@ $app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers'], functio
     $app->post('temp/cleartable', 'TempProController@clearTable');
     $app->post('temp/all', 'TempProController@all');
     $app->post('temp/getpreview', 'TempProController@getPreview');
+    $app->post('temp/setattr', 'TempProController@setAttr');
 });
 
 
@@ -65,6 +67,7 @@ $app->group(['prefix' => 'api/v1/t', 'namespace'=>'App\Http\Controllers\Temp'], 
     $app->post('layer/show', 'LayerController@show');
     $app->post('layer/add', 'LayerController@store');
     $app->post('layer/modify', 'LayerController@update');
+    $app->post('layer/setshow', 'LayerController@setIsShow');
     $app->post('layer/delete', 'LayerController@forceDelete');
     $app->post('layer/getmodel', 'LayerController@getModel');
     //动画关键帧路由
