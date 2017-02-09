@@ -8,7 +8,7 @@ class OrderModel extends BaseModel
      */
     protected $table = 'orders';
     protected $fillable = [
-        'id','productid','serial','cate','uid','uname','seller','format','money1','money2','weal','record','thumb','linkType','link','status','isshow','created_at','updated_at',
+        'id','pro_id','serial','cate','uid','uname','format','money1','money2','weal','record','thumb','linkType','link','status','isshow','created_at','updated_at',
     ];
     //record：待处理字段，修改过的内容、属性、动画...
 
@@ -29,7 +29,7 @@ class OrderModel extends BaseModel
      */
     public function getProduct()
     {
-        $productModel = ProductModel::find($this->productid);
+        $productModel = ProductModel::find($this->pro_id);
         return $productModel ? $productModel : '';
     }
 

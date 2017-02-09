@@ -7,16 +7,16 @@ class BaseModel extends Model
 {
     public $timestamps = false;
 
-    //支持 GoodsModel、WorksModel
     //样片类型：1电视剧，2电影，3微电影，4广告，5宣传片，6专题片，7汇报片，8主题片，9纪录片，10晚会，11淘宝视频，12婚纱摄影 ,13节日聚会，14个人短片
     protected $cates = [
         1=>'电视剧','电影','微电影','广告','宣传片','专题片','汇报片','主题片','纪录片','晚会','淘宝视频','婚庆摄影','节日聚会','个人短片',
     ];
+
     //链接类型：1Flash代码，2html代码，3通用代码，4其他网址链接
     protected $linkTypes = [
         1=>'Flash代码','html代码','通用代码','其他网址链接',
     ];
-    //支持 OrderModel、OrdersFirmModel、OrdersProdustModel
+
     //视频格式：网络版640*480，标清720*576，小高清1280*720，高清1920*1080，
     protected $formats = [
         1=>'640*480','720*576','1280*720','1920*1080',
@@ -25,10 +25,19 @@ class BaseModel extends Model
         1=>'网络版','标清','小高清','高清',
     ];
     protected $formatMoneys = [
-        1=>40,60,80,100
+        1=>40,50,70,100
     ];
+
     protected $isshows = [
         1=>'不显示','显示',
+    ];
+
+    //border边框类型：solid实线，dotted点线，dashed虚线，double双线，groove3D凹槽，ridge菱形边框，inset3D凹边，outset3D凸边，
+    protected $border2names = [
+        1=>'实线','点线','虚线','双线','3D凹槽','菱形边框','3D凹边','3D凸边',
+    ];
+    protected $border2s = [
+        1=>'solid','dotted','dashed','double','groove','ridge','inset','outset',
     ];
 
     /**
@@ -73,7 +82,7 @@ class BaseModel extends Model
      */
     public function createTime()
     {
-        return $this->created_at ? date("Y年m月d日 H:i", $this->created_at) : '';
+        return $this->created_at ? date("Y年m月d日", $this->created_at) : '';
     }
 
     /**
@@ -81,6 +90,6 @@ class BaseModel extends Model
      */
     public function updateTime()
     {
-        return $this->updated_at ? date("Y年m月d日 H:i", $this->updated_at) : '未更新';
+        return $this->updated_at ? date("Y年m月d日", $this->updated_at) : '未更新';
     }
 }

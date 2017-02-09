@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\Product;
 
-use App\Models\Product\ProLayerModel;
+use App\Models\Product\LayerModel;
 
 class LayerController extends BaseController
 {
@@ -9,18 +9,29 @@ class LayerController extends BaseController
      * 产品的动画设置控制器
      */
 
+    public function __construct()
+    {
+        $this->selfModel = new LayerModel();
+    }
+
     /**
      * 列表
      */
     public function index()
     {
-        $limit = isset($_POST['limit'])?$_POST['limit']:$this->limit;     //每页显示记录数
-        $page = isset($_POST['page'])?$_POST['page']:1;         //页码，默认第一页
-        $start = $limit * ($page - 1);      //记录起始id
+        $pro_id = $_POST['pro_id'];
+        if (!$pro_id) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
 
-        $models = ProLayerModel::orderBy('id','desc')
-            ->skip($start)
-            ->take($limit)
+        $models = LayerModel::where('pro_id',$pro_id)
+            ->orderBy('delay','asc')
             ->get();
         if (!count($models)) {
             $rstArr = [
@@ -37,6 +48,7 @@ class LayerController extends BaseController
             $datas[$k] = $this->objToArr($model);
             $datas[$k]['createTime'] = $model->createTime();
             $datas[$k]['updateTime'] = $model->updateTime();
+            $datas[$k]['pname'] = $model->getProductName();
         }
         $rstArr = [
             'error' => [
@@ -44,95 +56,6 @@ class LayerController extends BaseController
                 'msg'   =>  '成功获取数据！',
             ],
             'data'  =>  $datas,
-        ];
-        echo json_encode($rstArr);exit;
-    }
-
-    /**
-     * 添加属性
-     */
-    public function store()
-    {
-        $name = $_POST['name'];
-        $productid = $_POST['productid'];
-        $a_name = $_POST['a_name'];
-        $timelong = $_POST['timelong'];
-        $func = $_POST['func'];
-        $delay = $_POST['delay'];
-        if (!$name || !$productid || !$a_name || !$func) {
-            $rstArr = [
-                'error' =>  [
-                    'code'  =>  -1,
-                    'msg'   =>  '参数有误！',
-                ],
-            ];
-            echo json_encode($rstArr);exit;
-        }
-        $data = [
-            'name' =>  $name,
-            'productid' =>  $productid,
-            'a_name'    =>  $a_name,
-            'timelong'  =>  $timelong,
-            'func'      =>  $func,
-            'delay'     =>  $delay,
-            'created_at'    =>  time(),
-        ];
-        ProLayerModel::create($data);
-        $rstArr = [
-            'error' => [
-                'code'  =>  0,
-                'msg'   =>  '操作成功！',
-            ],
-        ];
-        echo json_encode($rstArr);exit;
-    }
-
-    /**
-     * 修改属性
-     */
-    public function update()
-    {
-        $id = $_POST['id'];
-        $name = $_POST['name'];
-        $productid = $_POST['productid'];
-        $a_name = $_POST['a_name'];
-        $timelong = $_POST['timelong'];
-        $func = $_POST['func'];
-        $delay = $_POST['delay'];
-        if (!$id || !$name || !$productid || !$a_name || !$func) {
-            $rstArr = [
-                'error' =>  [
-                    'code'  =>  -1,
-                    'msg'   =>  '参数有误！',
-                ],
-            ];
-            echo json_encode($rstArr);exit;
-        }
-        $model = ProLayerModel::find($id);
-        if (!$model) {
-            $rstArr = [
-                'error' =>  [
-                    'code'  =>  -2,
-                    'msg'   =>  '没有数据！',
-                ],
-            ];
-            echo json_encode($rstArr);exit;
-        }
-        $data = [
-            'name' =>  $name,
-            'productid' =>  $productid,
-            'a_name'    =>  $a_name,
-            'timelong'  =>  $timelong,
-            'func'      =>  $func,
-            'delay'     =>  $delay,
-            'updated_at'    =>  time(),
-        ];
-        ProLayerModel::where('id',$id)->update($data);
-        $rstArr = [
-            'error' => [
-                'code'  =>  0,
-                'msg'   =>  '操作成功！',
-            ],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -152,7 +75,7 @@ class LayerController extends BaseController
             ];
             echo json_encode($rstArr);exit;
         }
-        $model = ProLayerModel::find($id);
+        $model = LayerModel::find($id);
         if (!$model) {
             $rstArr = [
                 'error' =>  [
@@ -165,6 +88,7 @@ class LayerController extends BaseController
         $datas = $this->objToArr($model);
         $datas['createTime'] = $model->createTime();
         $datas['updateTime'] = $model->updateTime();
+        $datas['pname'] = $model->getProductName();
         $rstArr = [
             'error' => [
                 'code'  =>  0,
@@ -176,13 +100,18 @@ class LayerController extends BaseController
     }
 
     /**
-     * 设置是否删除
+     * 添加属性
      */
-    public function setDel()
+    public function store()
     {
-        $id = $_POST['id'];
-        $del = $_POST['del'];
-        if (!$id || !in_array($del,[0,1])) {
+        $name = $_POST['name'];
+        $tempid = $_POST['tempid'];
+        $tl_id = $_POST['tlayerid'];
+        $pro_id = $_POST['pro_id'];
+        $timelong = $_POST['timelong'];
+        $delay = $_POST['delay'];
+        $uid = $_POST['uid'];
+        if (!$name || !$tempid || !$tl_id || !$pro_id || !$uid) {
             $rstArr = [
                 'error' =>  [
                     'code'  =>  -1,
@@ -191,7 +120,62 @@ class LayerController extends BaseController
             ];
             echo json_encode($rstArr);exit;
         }
-        $model = ProLayerModel::find($id);
+        $data = [
+            'name' =>  $name,
+            'tempid'    =>  $tempid,
+            'tl_id'     =>  $tl_id,
+            'pro_id'    =>  $pro_id,
+            'a_name'    =>  'layer_'.$uid.'_'.$pro_id.'_'.rand(0,10000),
+            'timelong'  =>  $timelong,
+            'delay'     =>  $delay,
+            'created_at'    =>  time(),
+        ];
+        LayerModel::create($data);
+        $rstArr = [
+            'error' => [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 修改属性
+     */
+    public function update()
+    {
+        $uid = $_POST['uid'];
+        $id = $_POST['id'];
+        $name = $_POST['name'];
+        $timelong = $_POST['timelong'];
+        $delay = $_POST['delay'];
+        $width = $_POST['width'];
+        $height = $_POST['height'];
+        $isborder = $_POST['isborder'];
+        $border1 = $_POST['border1'];
+        $border2 = $_POST['border2'];
+        $border3 = $_POST['border3'];
+        $isbg = $_POST['isbg'];
+        $bg = $_POST['bg'];
+        $iscolor = $_POST['iscolor'];
+        $color = $_POST['color'];
+        $fontsize = $_POST['fontsize'];
+        $iscon = $_POST['iscon'];
+        $text = $_POST['text'];
+        $img = $_POST['img'];
+        $isbigbg = $_POST['isbigbg'];
+        $bigbg = $_POST['bigbg'];
+        if (!$uid || !$id || !$name) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = LayerModel::where('uid',$uid)->where('id',$id)->first();
         if (!$model) {
             $rstArr = [
                 'error' =>  [
@@ -201,7 +185,75 @@ class LayerController extends BaseController
             ];
             echo json_encode($rstArr);exit;
         }
-        ProLayerModel::where('id',$id)->update(['del'=> $del]);
+        $cons = [
+            'iscon' =>  $iscon,
+            'text'  =>  $text,
+            'img'   =>  $img,
+        ];
+        $attrs = [
+            'width' =>  $width,
+            'height'    =>  $height,
+            'isborder'  =>  $isborder,
+            'border1'   =>  $border1,
+            'border2'   =>  $border2,
+            'border3'   =>  $border3,
+            'isbg'      =>  $isbg,
+            'bg'        =>  $bg,
+            'iscolor'   =>  $iscolor,
+            'color'     =>  $color,
+            'isbigbg'   =>  $isbigbg,
+            'bigbg'   =>  $bigbg,
+        ];
+        $data = [
+            'name' =>  $name,
+            'timelong'  =>  $timelong,
+            'delay'     =>  $delay,
+            'con'       =>  serialize($cons),
+            'attr'      =>  serialize($attrs),
+            'updated_at'    =>  time(),
+        ];
+        LayerModel::where('id',$id)->update($data);
+        $rstArr = [
+            'error' => [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 设置是否删除
+     */
+    public function setIsShow()
+    {
+        $uid = $_POST['uid'];
+        $id = $_POST['id'];
+        $isshow = $_POST['isshow'];
+        if (!$uid || !$id || !in_array($isshow,[1,2])) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = LayerModel::where('uid',$uid)->where('id',$id)->first();
+        if (!$model) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $data = [
+            'isshow'    =>  $isshow,
+            'updated_at'    =>  time(),
+        ];
+        LayerModel::where('id',$id)->update($data);
         $rstArr = [
             'error' => [
                 'code'  =>  0,
@@ -216,8 +268,9 @@ class LayerController extends BaseController
      */
     public function forceDelete()
     {
+        $uid = $_POST['uid'];
         $id = $_POST['id'];
-        if (!$id) {
+        if (!$uid || !$id) {
             $rstArr = [
                 'error' =>  [
                     'code'  =>  -1,
@@ -226,7 +279,7 @@ class LayerController extends BaseController
             ];
             echo json_encode($rstArr);exit;
         }
-        $model = ProLayerModel::find($id);
+        $model = LayerModel::where('uid',$uid)->where('id',$id)->first();
         if (!$model) {
             $rstArr = [
                 'error' =>  [
@@ -236,11 +289,29 @@ class LayerController extends BaseController
             ];
             echo json_encode($rstArr);exit;
         }
-        ProLayerModel::where('id',$id)->delete();
+        LayerModel::where('id',$id)->delete();
         $rstArr = [
             'error' => [
                 'code'  =>  0,
                 'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 获取 model
+     */
+    public function getModel()
+    {
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+            'model' =>  [
+                'border2s'  =>  $this->selfModel['border2s'],
+                'border2names'  =>  $this->selfModel['border2names'],
             ],
         ];
         echo json_encode($rstArr);exit;

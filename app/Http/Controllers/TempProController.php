@@ -58,11 +58,6 @@ class TempProController extends Controller
                 'msg'   =>  '操作成功！',
             ],
             'data'  =>  $datas,
-            'model' =>  [
-                'cates' =>  $this->selfModel['cates'],
-                'linkTypes' =>  $this->selfModel['linkTypes'],
-                'isshows'   =>  $this->selfModel['isshows'],
-            ],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -98,11 +93,6 @@ class TempProController extends Controller
                 'msg'   =>  '操作成功！',
             ],
             'data'  =>  $datas,
-            'model' =>  [
-                'cates' =>  $this->selfModel['cates'],
-                'linkTypes' =>  $this->selfModel['linkTypes'],
-                'isshows'   =>  $this->selfModel['isshows'],
-            ],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -144,11 +134,6 @@ class TempProController extends Controller
                 'msg'   =>  '操作成功！',
             ],
             'data'  =>  $datas,
-            'model' =>  [
-                'cates' =>  $this->selfModel['cates'],
-                'linkTypes' =>  $this->selfModel['linkTypes'],
-                'isshows'   =>  $this->selfModel['isshows'],
-            ],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -191,11 +176,6 @@ class TempProController extends Controller
                 'msg'   =>  '操作成功！',
             ],
             'data'  =>  $datas,
-            'model' =>  [
-                'cates' =>  $this->selfModel['cates'],
-                'linkTypes' =>  $this->selfModel['linkTypes'],
-                'isshows'   =>  $this->selfModel['isshows'],
-            ],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -551,6 +531,10 @@ class TempProController extends Controller
                 $this->objToArr($layerModel->getFrames(2)) : [];
             $datas['layer'][$k]['opacityArr'] = $layerModel->getFrames(3) ?
                 $this->objToArr($layerModel->getFrames(3)) : [];
+            $datas['layer'][$k]['rotateArr'] = $layerModel->getFrames(4) ?
+                $this->objToArr($layerModel->getFrames(4)) : [];
+            $datas['layer'][$k]['scaleArr'] = $layerModel->getFrames(5) ?
+                $this->objToArr($layerModel->getFrames(5)) : [];
         }
         $rstArr = [
             'error' =>  [
@@ -558,7 +542,6 @@ class TempProController extends Controller
                 'msg'   =>  '操作成功！',
             ],
             'data'  =>  $datas,
-            'model' =>  [],
         ];
         echo json_encode($rstArr);exit;
     }

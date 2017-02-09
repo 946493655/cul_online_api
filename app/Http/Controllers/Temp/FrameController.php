@@ -60,10 +60,6 @@ class FrameController extends BaseController
                 'msg'   =>  '操作成功！',
             ],
             'data'  =>  $datas,
-            'model' =>  [
-                'attrs'  =>  $this->selfModel['attrs'],
-                'attrNames'  =>  $this->selfModel['attrNames'],
-            ],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -108,10 +104,6 @@ class FrameController extends BaseController
                 'msg'   =>  '操作成功！',
             ],
             'data'  =>  $datas,
-            'model' =>  [
-                'attrs'  =>  $this->selfModel['attrs'],
-                'attrNames'  =>  $this->selfModel['attrNames'],
-            ],
         ];
         echo json_encode($rstArr);exit;
     }

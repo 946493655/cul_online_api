@@ -55,7 +55,6 @@ class LayerController extends BaseController
                 'msg'   =>  '操作成功！',
             ],
             'data'  =>  $datas,
-            'model' =>  [],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -95,7 +94,6 @@ class LayerController extends BaseController
                 'msg'   =>  '操作成功！',
             ],
             'data'  =>  $datas,
-            'model' =>  [],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -304,7 +302,6 @@ class LayerController extends BaseController
                 'msg'   =>  '操作成功！',
             ],
             'model' =>  [
-//                'fontsizes' =>  $this->selfModel['fontsizes'],
                 'border2s'  =>  $this->selfModel['border2s'],
                 'border2names'  =>  $this->selfModel['border2names'],
             ],

@@ -21,8 +21,8 @@ class OrderController extends Controller
     {
         $uid = $_POST['uid'];
         $cate = $_POST['cate'];
-        $isshow = $_POST['isshow'];
         $status = isset($_POST['status'])?$_POST['status']:0;
+        $isshow = $_POST['isshow'];
         $limit = (isset($_POST['limit'])&&$_POST['limit'])?$_POST['limit']:$this->limit;     //每页显示记录数
         $page = isset($_POST['page'])?$_POST['page']:1;         //页码，默认第一页
         $start = $limit * ($page - 1);      //记录起始id
@@ -33,16 +33,16 @@ class OrderController extends Controller
         if ($uid) {
             $models = OrderModel::where('uid',$uid)
                 ->whereIn('cate',$cateArr)
-                ->whereIn('isshow',$isshowArr)
                 ->whereIn('status',$statusArr)
+                ->whereIn('isshow',$isshowArr)
                 ->orderBy('id','desc')
                 ->skip($start)
                 ->take($limit)
                 ->get();
         } else {
             $models = OrderModel::whereIn('cate',$cateArr)
-                ->whereIn('isshow',$isshowArr)
                 ->whereIn('status',$statusArr)
+                ->whereIn('isshow',$isshowArr)
                 ->orderBy('id','desc')
                 ->skip($start)
                 ->take($limit)
@@ -76,15 +76,6 @@ class OrderController extends Controller
                 'msg'   =>  '成功获取数据！',
             ],
             'data'  =>  $datas,
-            'model' =>  [
-                'cates'   =>  $this->selfModel['cates'],
-                'linkTypes'     =>  $this->selfModel['linkTypes'],
-                'formats'       =>  $this->selfModel['formats'],
-                'formatNames'   =>  $this->selfModel['formatNames'],
-                'formatMoneys'  =>  $this->selfModel['formatMoneys'],
-                'statuss'   =>  $this->selfModel['statuss'],
-                'isshows'   =>  $this->selfModel['isshows'],
-            ],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -107,7 +98,6 @@ class OrderController extends Controller
             $models = OrderModel::orderBy('id','desc')
                 ->skip(0)
                 ->take($limit)
-//                ->paginate($limit);
                 ->get();
         } elseif ($uid && !$limit) {
             $models = OrderModel::where('uid',$uid)
@@ -144,15 +134,6 @@ class OrderController extends Controller
                 'msg'   =>  '成功获取数据！',
             ],
             'data'  =>  $datas,
-            'model' =>  [
-                'cates'   =>  $this->selfModel['cates'],
-                'linkTypes'     =>  $this->selfModel['linkTypes'],
-                'formats'       =>  $this->selfModel['formats'],
-                'formatNames'   =>  $this->selfModel['formatNames'],
-                'formatMoneys'  =>  $this->selfModel['formatMoneys'],
-                'statuss'   =>  $this->selfModel['statuss'],
-                'isshows'   =>  $this->selfModel['isshows'],
-            ],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -283,15 +264,6 @@ class OrderController extends Controller
                 'msg'   =>  '成功获取数据！',
             ],
             'data'  =>  $datas,
-            'model' =>  [
-                'cates'   =>  $this->selfModel['cates'],
-                'linkTypes'     =>  $this->selfModel['linkTypes'],
-                'formats'       =>  $this->selfModel['formats'],
-                'formatNames'   =>  $this->selfModel['formatNames'],
-                'formatMoneys'  =>  $this->selfModel['formatMoneys'],
-                'statuss'   =>  $this->selfModel['statuss'],
-                'isshows'   =>  $this->selfModel['isshows'],
-            ],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -373,15 +345,14 @@ class OrderController extends Controller
      */
     public function getModel()
     {
-        $model = new OrderModel();
         $arr = array(
-            'cates'         =>  $model['cates'],
-            'linkTypes'     =>  $model['linkTypes'],
-            'formats'       =>  $model['formats'],
-            'formatNames'   =>  $model['formatNames'],
-            'formatMoneys'  =>  $model['formatMoneys'],
-            'statuss'   =>  $model['statuss'],
-            'isshows'   =>  $model['isshows'],
+            'cates'         =>  $this->selfModel['cates'],
+            'linkTypes'     =>  $this->selfModel['linkTypes'],
+            'formats'       =>  $this->selfModel['formats'],
+            'formatNames'   =>  $this->selfModel['formatNames'],
+            'formatMoneys'  =>  $this->selfModel['formatMoneys'],
+            'statuss'   =>  $this->selfModel['statuss'],
+            'isshows'   =>  $this->selfModel['isshows'],
         );
         $rstArr = [
             'error' =>  [
