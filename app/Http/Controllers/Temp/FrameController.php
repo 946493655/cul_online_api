@@ -108,6 +108,47 @@ class FrameController extends BaseController
         echo json_encode($rstArr);exit;
     }
 
+    /**
+     * 通过 tl_id 对应模板关键帧获取当前关键帧
+     */
+    public function getFrameByTFid()
+    {
+        $tf_id = $_POST['tf_id'];
+        if (!$tf_id) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = FrameModel::find($tf_id);
+        if (!$model) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $datas = $this->objToArr($model);
+        $datas['createTime'] = $model->createTime();
+        $datas['updateTime'] = $model->updateTime();
+        $datas['getAttr'] = $model->getAttr();
+        $datas['getAttrName'] = $model->getAttrName();
+        $datas['layerName'] = $model->getLayerName();
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+            'data'  =>  $datas,
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
     public function store()
     {
         $tempid = $_POST['tempid'];

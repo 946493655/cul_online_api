@@ -8,9 +8,8 @@ class OrderModel extends BaseModel
      */
     protected $table = 'orders';
     protected $fillable = [
-        'id','pro_id','serial','cate','uid','uname','format','money1','money2','weal','record','thumb','linkType','link','status','isshow','created_at','updated_at',
+        'id','pro_id','serial','cate','uid','uname','format','money','weal','money1','money2','thumb','linkType','link','status','isshow','created_at','updated_at',
     ];
-    //record：待处理字段，修改过的内容、属性、动画...
 
     //视频类型：1Flash代码，2html代码，2通用代码，4其他网址链接
     protected $linkTypes = [
@@ -18,7 +17,7 @@ class OrderModel extends BaseModel
     ];
     //订单状态：1待打款，2款不对，3待处理，4已处理待接收，5已接收待评价，6坏评价，7好评价并返利
     protected $statuss = [
-        '所有','待付款','款不对','已付款处理中','已处理待接收','已接收待评价','评价不好','好评并返利',
+        '所有','未付款','款不对','已付款处理中','已处理待接收','已接收待评价','评价不好','好评并返利',
     ];
     protected $isshows = [
         '所有','不显示','显示',

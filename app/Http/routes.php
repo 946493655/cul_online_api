@@ -51,7 +51,7 @@ $app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers'], functio
     $app->post('product/preview', 'ProductController@getPreview');
     //产品订单路由
     $app->post('order', 'OrderController@index');
-//    $app->post('order/add', 'OrderController@store');
+    $app->post('order/add', 'OrderController@store');
 //    $app->post('order/modifylink', 'OrderController@updateLink');
 //    $app->post('order/show', 'OrderController@show');
 //    $app->post('order/getorders', 'OrderController@getOrders');
@@ -76,9 +76,10 @@ $app->group(['prefix' => 'api/v1/t', 'namespace'=>'App\Http\Controllers\Temp'], 
     $app->post('frame', 'FrameController@index');
     $app->post('frame/add', 'FrameController@store');
     $app->post('frame/modify', 'FrameController@update');
-    $app->post('frame/getmodel', 'FrameController@getModel');
     $app->post('frame/getframesbytempid', 'FrameController@getFramesByTempid');
+    $app->post('frame/onebytfid', 'FrameController@getFrameByTFid');
     $app->post('frame/delete', 'FrameController@forceDelete');
+    $app->post('frame/getmodel', 'FrameController@getModel');
 });
 
 

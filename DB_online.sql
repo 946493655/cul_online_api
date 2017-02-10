@@ -25,14 +25,15 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `pro_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '在线创作产品id',
-  `serial` varchar(20) NOT NULL DEFAULT '0' COMMENT '订单编号',
+  `serial` varchar(20) NOT NULL DEFAULT '0' COMMENT '订单编号，年月日时分秒+10000随机值',
   `cate` tinyint(2) unsigned NOT NULL DEFAULT '1' COMMENT '样片类型：1电视剧，2电影，3微电影，4广告，5宣传片，6专题片，7汇报片，8主题片，9纪录片，10晚会，11淘宝视频，12婚纱摄影，13节日聚会，14个人短片，',
   `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
   `uname` varchar(50) NOT NULL COMMENT '用户名称，便于搜索',
   `format` tinyint(1) unsigned NOT NULL DEFAULT '3' COMMENT '输出格式：1网络版640*480，2标清720*576，3小高清1280*720，4高清1920*1080',
+  `money` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '总价格，单位元',
+  `weal` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '已支付福利，单位元',
   `money1` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '应支付金额，单位元',
   `money2` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '已支付金额，单位元',
-  `weal` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '已支付福利，单位元',
   `thumb` varchar(255) NOT NULL COMMENT '缩略图',
   `linkType` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '视频链接类型：1Flash代码，2html代码，3通用代码，4其他网址链接',
   `link` varchar(255) NOT NULL COMMENT '视频链接',
@@ -41,7 +42,7 @@ CREATE TABLE `orders` (
   `created_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表 orders';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='订单表 orders';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -50,6 +51,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (1,1,'201702101725518064',1,1,'jiuge',1,40,0,40,0,'',1,'',1,2,1486718751,0),(2,1,'201702101730589829',1,1,'jiuge',1,40,0,40,0,'',1,'',2,2,1486719058,0);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,4 +262,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-02-09 21:23:41
+-- Dump completed on 2017-02-10 19:09:07

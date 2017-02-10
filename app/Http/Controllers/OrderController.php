@@ -143,14 +143,24 @@ class OrderController extends Controller
      */
     public function store()
     {
-        $productid = $_POST['productid'];
-        $serial = $_POST['serial'];
+        $pro_id = $_POST['pro_id'];
         $cate = $_POST['cate'];
         $uid = $_POST['uid'];
         $uname = $_POST['uname'];
-        $seller = $_POST['seller'];
         $format = $_POST['format'];
-        if (!$productid || !$serial || !$cate || !$uid || !$uname || !$format) {
+        $money = $_POST['money'];
+        $weal = $_POST['weal'];
+        $money1 = $_POST['money1'];
+        if (!$pro_id || !$cate || !$uid || !$uname || !$format) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        if (!$money && !$weal && !$money1) {
             $rstArr = [
                 'error' =>  [
                     'code'  =>  -1,
@@ -160,14 +170,15 @@ class OrderController extends Controller
             echo json_encode($rstArr);exit;
         }
         $data = [
-            'productid' =>  $productid,
-            'serial'    =>  $serial,
+            'pro_id' =>  $pro_id,
+            'serial'    =>  date('YmdHis',time()).rand(0,10000),
             'cate'  =>  $cate,
             'uid'   =>  $uid,
             'uname' =>  $uname,
-            'seller'    =>  $seller,
             'format'    =>  $format,
-            'status'    =>  1,
+            'money'    =>  $money,
+            'weal'      =>  $weal,
+            'money1'    =>  $money1,
             'created_at'    =>  time(),
         ];
         OrderModel::create($data);

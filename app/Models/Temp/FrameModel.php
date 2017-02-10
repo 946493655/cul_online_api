@@ -9,7 +9,7 @@ class FrameModel extends BaseModel
 
     protected $table = 'temp_frame';
     protected $fillable = [
-        'id','tempid','layerid','attr','per','val','created_at','updated_at',
+        'id','tempid','layerid','tf_id','attr','per','val','created_at','updated_at',
     ];
 
     //key动画的属性名：
