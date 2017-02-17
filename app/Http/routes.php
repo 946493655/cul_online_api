@@ -58,6 +58,7 @@ $app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers'], functio
 //    $app->post('order/clear', 'OrderController@cleartable');
 //    $app->post('order/isshow', 'OrderController@setIsShow');
 //    $app->post('order/status', 'OrderController@setStatus');
+    $app->post('order/ordersbyweal', 'OrderController@getOrdersByWeal');
     $app->post('order/getmodel', 'OrderController@getModel');
 });
 

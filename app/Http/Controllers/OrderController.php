@@ -35,6 +35,7 @@ class OrderController extends Controller
                 ->whereIn('cate',$cateArr)
                 ->whereIn('status',$statusArr)
                 ->whereIn('isshow',$isshowArr)
+                ->whereIn('del',0)
                 ->orderBy('id','desc')
                 ->skip($start)
                 ->take($limit)
@@ -43,6 +44,7 @@ class OrderController extends Controller
             $models = OrderModel::whereIn('cate',$cateArr)
                 ->whereIn('status',$statusArr)
                 ->whereIn('isshow',$isshowArr)
+                ->whereIn('del',0)
                 ->orderBy('id','desc')
                 ->skip($start)
                 ->take($limit)
@@ -111,6 +113,77 @@ class OrderController extends Controller
                 'error' =>  [
                     'code'  =>  -1,
                     'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        //整理数据
+        $datas = array();
+        foreach ($models as $k=>$model) {
+            $datas[$k] = $this->objToArr($model);
+            $datas[$k]['pname'] = $model->getProductName();
+            $datas[$k]['cateName'] = $model->getCateName();
+            $datas[$k]['statusName'] = $model->getStatusName();
+            $datas[$k]['formatName'] = $model->getFormatName();
+            $datas[$k]['formatMoney'] = $model->getFormatMoney();
+            $datas[$k]['isShowName'] = $model->isshow();
+            $datas[$k]['createTime'] = $model->createTime();
+            $datas[$k]['updateTime'] = $model->updateTime();
+        }
+        $rstArr = [
+            'error' => [
+                'code'  =>  0,
+                'msg'   =>  '成功获取数据！',
+            ],
+            'data'  =>  $datas,
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 通过 uid、weal 获取已支付福利记录
+     */
+    public function getOrdersByWeal()
+    {
+        $uid = $_POST['uid'];
+        $cate = $_POST['cate'];
+        $isshow = $_POST['isshow'];
+        $del = $_POST['del'];
+        $limit = (isset($_POST['limit'])&&$_POST['limit'])?$_POST['limit']:$this->limit;     //每页显示记录数
+        $page = isset($_POST['page'])?$_POST['page']:1;         //页码，默认第一页
+        $start = $limit * ($page - 1);      //记录起始id
+
+        $cateArr = $cate ? array($cate) : array(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15);
+        $isshowArr = $isshow ? array($isshow) : array(0,1,2);
+        if ($uid) {
+            $models = OrderModel::where('del',$del)
+                ->where('uid',$uid)
+                ->where('weal','>',0)
+                ->whereIn('cate',$cateArr)
+                ->whereIn('status',[4,5,6,7])
+                ->whereIn('isshow',$isshowArr)
+                ->whereIn('del',0)
+                ->orderBy('id','desc')
+                ->skip($start)
+                ->take($limit)
+                ->get();
+        } else {
+            $models = OrderModel::where('del',$del)
+                ->where('weal','>',0)
+                ->whereIn('cate',$cateArr)
+                ->whereIn('status',[4,5,6,7])
+                ->whereIn('isshow',$isshowArr)
+                ->whereIn('del',0)
+                ->orderBy('id','desc')
+                ->skip($start)
+                ->take($limit)
+                ->get();
+        }
+        if (!count($models)) {
+            $rstArr = [
+                'error' => [
+                    'code'  =>  -2,
+                    'msg'   =>  '未获取到数据！',
                 ],
             ];
             echo json_encode($rstArr);exit;
