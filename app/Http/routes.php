@@ -54,7 +54,7 @@ $app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers'], functio
     $app->post('order/add', 'OrderController@store');
 //    $app->post('order/modifylink', 'OrderController@updateLink');
 //    $app->post('order/show', 'OrderController@show');
-//    $app->post('order/getorders', 'OrderController@getOrders');
+    $app->post('order/getorders', 'OrderController@getOrders');
 //    $app->post('order/clear', 'OrderController@cleartable');
 //    $app->post('order/isshow', 'OrderController@setIsShow');
 //    $app->post('order/status', 'OrderController@setStatus');
