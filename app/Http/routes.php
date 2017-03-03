@@ -28,7 +28,7 @@ $app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers'], functio
     $app->post('temp/setlink', 'TempProController@setLink');
     $app->post('temp/modify', 'TempProController@update');
     $app->post('temp/show', 'TempProController@show');
-    $app->post('temp/isshow', 'TempProController@setIsShow');
+    $app->post('temp/setshow', 'TempProController@setIsShow');
     $app->post('temp/delete', 'TempProController@forceDelete');
     $app->post('temp/getone', 'TempProController@getOneByShow');
     $app->post('temp/getmodel', 'TempProController@getModel');
@@ -44,8 +44,7 @@ $app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers'], functio
     $app->post('product/setthumb', 'ProductController@setThumb');
     $app->post('product/setlink', 'ProductController@setLink');
     $app->post('product/onebyuid', 'ProductController@getOneByUid');
-    $app->post('product/isshow', 'ProductController@setIsShow');
-//    $app->post('product/delete', 'ProductController@forceDelete');
+    $app->post('product/setshow', 'ProductController@setShow');
     $app->post('product/deleteby2id', 'ProductController@forceDeleteBy2Id');
     $app->post('product/getmodel', 'ProductController@getModel');
     $app->post('product/preview', 'ProductController@getPreview');
@@ -96,9 +95,9 @@ $app->group(['prefix' => 'api/v1/pro', 'namespace'=>'App\Http\Controllers\Produc
     $app->post('layer/getmodel', 'LayerController@getModel');
     //动画关键帧路由
     $app->post('frame', 'FrameController@index');
-//    $app->post('frame/add', 'FrameController@store');
-//    $app->post('frame/modify', 'FrameController@update');
-//    $app->post('frame/getmodel', 'FrameController@getModel');
+    $app->post('frame/add', 'FrameController@store');
+    $app->post('frame/modify', 'FrameController@update');
     $app->post('frame/framesbyproid', 'FrameController@getFramesByProid');
-//    $app->post('frame/delete', 'FrameController@forceDelete');
+    $app->post('frame/delete', 'FrameController@forceDelete');
+    $app->post('frame/getmodel', 'FrameController@getModel');
 });

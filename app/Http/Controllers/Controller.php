@@ -9,6 +9,10 @@ class Controller extends BaseController
     protected $limit = 20;      //每页显示记录数
     protected $selfModel;       //当前控制器model
 
+    public function __construct()
+    {
+    }
+
     /**
      * 对象转为数组
      */

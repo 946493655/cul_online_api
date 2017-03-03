@@ -11,4 +11,10 @@ class ProductModel extends BaseModel
     protected $fillable = [
         'id','name','tempid','uid','cate','uname','intro','thumb','linkType','link','attr','isshow','created_at','updated_at',
     ];
+
+    public function getTempName()
+    {
+        $tempModel = TempProModel::find($this->tempid);
+        return $tempModel ? $tempModel->name : '';
+    }
 }

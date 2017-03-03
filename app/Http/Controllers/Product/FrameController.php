@@ -9,6 +9,11 @@ class FrameController extends BaseController
      * 产品关键帧
      */
 
+    public function __construct()
+    {
+        $this->selfModel = new FrameModel();
+    }
+
     public function index()
     {
         $pro_id = $_POST['pro_id'];
@@ -91,6 +96,23 @@ class FrameController extends BaseController
                 'msg'   =>  '操作成功！',
             ],
             'data'  =>  $datas,
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /** 获取 model
+     */
+    public function getModel()
+    {
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+            'model' =>  [
+                'attrs'  =>  $this->selfModel['attrs'],
+                'attrNames'  =>  $this->selfModel['attrNames'],
+            ],
         ];
         echo json_encode($rstArr);exit;
     }

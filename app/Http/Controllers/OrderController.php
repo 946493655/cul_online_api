@@ -31,25 +31,21 @@ class OrderController extends Controller
         $isshowArr = $isshow ? array($isshow) : array(0,1,2);
         $statusArr = $status ? array($status) : array(0,1,2,3,4,5,6,7,8,9,10);
         if ($uid) {
-            $models = OrderModel::where('uid',$uid)
-                ->whereIn('cate',$cateArr)
-                ->whereIn('status',$statusArr)
-                ->whereIn('isshow',$isshowArr)
-                ->whereIn('del',0)
-                ->orderBy('id','desc')
-                ->skip($start)
-                ->take($limit)
-                ->get();
+            $query = OrderModel::where('uid',$uid)->where('del',0);
         } else {
-            $models = OrderModel::whereIn('cate',$cateArr)
-                ->whereIn('status',$statusArr)
-                ->whereIn('isshow',$isshowArr)
-                ->whereIn('del',0)
-                ->orderBy('id','desc')
-                ->skip($start)
-                ->take($limit)
-                ->get();
+            $query = OrderModel::where('del',0);
         }
+        $models = $query->whereIn('cate',$cateArr)
+            ->whereIn('status',$statusArr)
+            ->whereIn('isshow',$isshowArr)
+            ->orderBy('id','desc')
+            ->skip($start)
+            ->take($limit)
+            ->get();
+        $total = $query->whereIn('cate',$cateArr)
+            ->whereIn('status',$statusArr)
+            ->whereIn('isshow',$isshowArr)
+            ->count();
         if (!count($models)) {
             $rstArr = [
                 'error' => [
@@ -78,6 +74,9 @@ class OrderController extends Controller
                 'msg'   =>  '成功获取数据！',
             ],
             'data'  =>  $datas,
+            'pagelist'  =>  [
+                'total' =>  $total,
+            ],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -92,21 +91,24 @@ class OrderController extends Controller
         if ($uid && $limit) {
             $models = OrderModel::where('uid',$uid)
                 ->orderBy('id','desc')
-                ->skip(0)
+                ->skip(1)
                 ->take($limit)
-//                ->paginate($limit);
                 ->get();
+            $total = OrderModel::where('uid',$uid)->count();
         } elseif (!$uid && $limit) {
             $models = OrderModel::orderBy('id','desc')
-                ->skip(0)
+                ->skip(1)
                 ->take($limit)
                 ->get();
+            $total = OrderModel::count();
         } elseif ($uid && !$limit) {
             $models = OrderModel::where('uid',$uid)
                 ->orderBy('id','desc')
                 ->get();
-        } elseif (!$uid && !$limit) {
+            $total = OrderModel::where('uid',$uid)->count();
+        } else {
             $models = OrderModel::orderBy('id','desc')->get();
+            $total = OrderModel::count();
         }
         if (!count($models)) {
             $rstArr = [
@@ -136,6 +138,9 @@ class OrderController extends Controller
                 'msg'   =>  '成功获取数据！',
             ],
             'data'  =>  $datas,
+            'pagelist'  =>  [
+                'total' =>  $total,
+            ],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -156,29 +161,24 @@ class OrderController extends Controller
         $cateArr = $cate ? array($cate) : array(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15);
         $isshowArr = $isshow ? array($isshow) : array(0,1,2);
         if ($uid) {
-            $models = OrderModel::where('del',$del)
-                ->where('uid',$uid)
-                ->where('weal','>',0)
-                ->whereIn('cate',$cateArr)
-                ->whereIn('status',[4,5,6,7])
-                ->whereIn('isshow',$isshowArr)
-                ->whereIn('del',0)
-                ->orderBy('id','desc')
-                ->skip($start)
-                ->take($limit)
-                ->get();
+            $query = OrderModel::where('uid',$uid)
+                ->where('del',$del);
         } else {
-            $models = OrderModel::where('del',$del)
-                ->where('weal','>',0)
-                ->whereIn('cate',$cateArr)
-                ->whereIn('status',[4,5,6,7])
-                ->whereIn('isshow',$isshowArr)
-                ->whereIn('del',0)
-                ->orderBy('id','desc')
-                ->skip($start)
-                ->take($limit)
-                ->get();
+            $query = OrderModel::where('del',$del);
         }
+        $models = $query->where('weal','>',0)
+            ->whereIn('cate',$cateArr)
+            ->whereIn('status',[4,5,6,7])
+            ->whereIn('isshow',$isshowArr)
+            ->orderBy('id','desc')
+            ->skip($start)
+            ->take($limit)
+            ->get();
+        $total = $query->where('weal','>',0)
+            ->whereIn('cate',$cateArr)
+            ->whereIn('status',[4,5,6,7])
+            ->whereIn('isshow',$isshowArr)
+            ->count();
         if (!count($models)) {
             $rstArr = [
                 'error' => [
@@ -207,6 +207,9 @@ class OrderController extends Controller
                 'msg'   =>  '成功获取数据！',
             ],
             'data'  =>  $datas,
+            'pagelist'  =>  [
+                'total' =>  $total,
+            ],
         ];
         echo json_encode($rstArr);exit;
     }

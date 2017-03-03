@@ -193,17 +193,22 @@ class LayerController extends BaseController
             'isbigbg'   =>  $isbigbg,
             'bigbg'     =>  $bigbg,
         ];
-        $conArr = [
-            'iscon'     =>  $iscon,
-            'text'      =>  $text,
-            'img'       =>  $img,
-        ];
+        $cons = $model->con ? unserialize($model->con) : [];
+        if ($cons) {
+            $conArr = [
+                'iscon'     =>  $iscon,
+                'text'      =>  !$text ? $cons['text'] : $text,
+                'img'       =>  !$img ? $cons['img'] : $img,
+            ];
+        } else {
+            $conArr = '';
+        }
         $data = [
             'name'      =>  $name,
             'timelong'  =>  $timelong,
             'delay'     =>  $delay,
             'attr'      =>  serialize($attrArr),
-            'con'       =>  serialize($conArr),
+            'con'       =>  $conArr ? serialize($conArr) : '',
             'updated_at'    =>  time(),
         ];
         LayerModel::where('id',$id)->update($data);

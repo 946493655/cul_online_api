@@ -39,6 +39,7 @@ CREATE TABLE `orders` (
   `link` varchar(255) NOT NULL COMMENT '视频链接',
   `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '订单状态：1待定价，待打款，款不对或过期，已付款处理中，已处理待评价，评价不好，好评并返利',
   `isshow` tinyint(1) unsigned NOT NULL DEFAULT '2' COMMENT '前台列表是否显示：1不显示，2显示，默认2',
+  `del` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '回收站：1不删除，1删除',
   `created_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -51,7 +52,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1,1,'201702101725518064',1,1,'jiuge',1,40,0,40,0,'',1,'',1,2,1486718751,0),(2,1,'201702101730589829',1,1,'jiuge',1,40,0,40,0,'',1,'',2,2,1486719058,0);
+INSERT INTO `orders` VALUES (1,1,'201702101725518064',1,1,'jiuge',1,40,0,40,0,'',1,'',1,2,0,1486718751,0),(2,1,'201702101730589829',1,1,'jiuge',1,40,0,40,0,'',1,'',2,2,0,1486719058,0);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -240,7 +241,7 @@ CREATE TABLE `temp_pro` (
   `created_at` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `updated_at` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='在线创作模板';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='在线创作模板';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -249,7 +250,7 @@ CREATE TABLE `temp_pro` (
 
 LOCK TABLES `temp_pro` WRITE;
 /*!40000 ALTER TABLE `temp_pro` DISABLE KEYS */;
-INSERT INTO `temp_pro` VALUES (1,'模板测试','AE_20170107101552725',1,'测试测试','http://online.jiugewenhua.com/uploads/images/2017-02-08/589ab3f13d0cc.jpg',2,'<embed src=\"http://player.pptv.com/v/khZ089VnXpzicfeU.swf\" quality=\"high\" width=\"480\" height=\"400\" bgcolor=\"#000\" align=\"middle\" allowScriptAccess=\"always\" allownetworking=\"all\" allowfullscreen=\"true\" type=\"application/x-shockwave-flash\" wmode=\"direct\" />','',2,1483755352,1486533617);
+INSERT INTO `temp_pro` VALUES (1,'模板测试','AE_20170107101552725',1,'测试测试','http://online.jiugewenhua.com/uploads/images/2017-02-08/589ab3f13d0cc.jpg',2,'<embed src=\"http://player.pptv.com/v/khZ089VnXpzicfeU.swf\" quality=\"high\" width=\"480\" height=\"400\" bgcolor=\"#000\" align=\"middle\" allowScriptAccess=\"always\" allownetworking=\"all\" allowfullscreen=\"true\" type=\"application/x-shockwave-flash\" wmode=\"direct\" />','',1,1483755352,1486533617),(2,'测试测试','AE_20170302141713124',1,'1\r\n000000000000000','',1,'','',2,1488435433,1488435825);
 /*!40000 ALTER TABLE `temp_pro` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -262,4 +263,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-02-16 22:02:12
+-- Dump completed on 2017-03-02 16:45:25

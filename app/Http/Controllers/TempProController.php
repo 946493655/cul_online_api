@@ -33,6 +33,9 @@ class TempProController extends Controller
             ->skip($start)
             ->take($limit)
             ->get();
+        $total = TempProModel::whereIn('cate',$cateArr)
+            ->whereIn('isshow',$isshowArr)
+            ->count();
         if (!count($models)) {
             $rstArr = [
                 'error' => [
@@ -58,6 +61,9 @@ class TempProController extends Controller
                 'msg'   =>  '操作成功！',
             ],
             'data'  =>  $datas,
+            'pagelist'  =>  [
+                'total' =>  $total,
+            ],
         ];
         echo json_encode($rstArr);exit;
     }

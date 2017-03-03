@@ -28,19 +28,23 @@ class ProductController extends Controller
         $start = $limit * ($page - 1);      //记录起始id
 
         $isshowArr = $isshow ? [$isshow] : [0,1,2];
-        if (!$uid) {
+        if ($uid) {
             $models = ProductModel::where('uid',$uid)
                 ->whereIn('isshow',$isshowArr)
                 ->orderBy('id','desc')
                 ->skip($start)
                 ->take($limit)
                 ->get();
+            $total = ProductModel::where('uid',$uid)
+                ->whereIn('isshow',$isshowArr)
+                ->count();
         } else {
             $models = ProductModel::whereIn('isshow',$isshowArr)
                 ->orderBy('id','desc')
                 ->skip($start)
                 ->take($limit)
                 ->get();
+            $total = ProductModel::whereIn('isshow',$isshowArr)->count();
         }
         if (!count($models)) {
             $rstArr = [
@@ -56,6 +60,7 @@ class ProductController extends Controller
             $datas[$k] = $this->objToArr($model);
             $datas[$k]['createTime'] = $model->createTime();
             $datas[$k]['updateTime'] = $model->updateTime();
+            $datas[$k]['tempName'] = $model->getTempName();
             $datas[$k]['cateName'] = $model->getCateName();
             $datas[$k]['linkTypeName'] = $model->getLinkTypeName();
             $datas[$k]['isShowName'] = $model->isshow();
@@ -66,6 +71,9 @@ class ProductController extends Controller
                 'msg'   =>  '操作成功！',
             ],
             'data'  =>  $datas,
+            'pagelist'  =>  [
+                'total' =>  $total,
+            ],
         ];
         echo json_encode($rstArr);exit;
     }
@@ -99,6 +107,7 @@ class ProductController extends Controller
         $datas = $this->objToArr($model);
         $datas['createTime'] = $model->createTime();
         $datas['updateTime'] = $model->updateTime();
+        $datas['tempName'] = $model->getTempName();
         $datas['cateName'] = $model->getCateName();
         $datas['linkTypeName'] = $model->getLinkTypeName();
         $datas['isShowName'] = $model->isshow();
@@ -163,7 +172,7 @@ class ProductController extends Controller
             $rstArr = [
                 'error' =>  [
                     'code'  =>  -5,
-                    'msg'   =>  '已有此模板！',
+                    'msg'   =>  '该用户已有此模板的产品！',
                 ],
             ];
             echo json_encode($rstArr);exit;
@@ -171,6 +180,7 @@ class ProductController extends Controller
         $time = time();
         $data = [
             'name'  =>  $name,
+            'cate'  =>  $tempModel->cate,
             'intro'     =>  $intro,
             'tempid'    =>  $tempid,
             'uid'       =>  $uid,
@@ -409,6 +419,42 @@ class ProductController extends Controller
             'updated_at'    =>  time(),
         ];
         ProductModel::where('id',$id)->update($data);
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 设置是否显示
+     */
+    public function setShow()
+    {
+        $id = $_POST['id'];
+        $isshow = $_POST['isshow'];
+        if (!$id || !in_array($isshow,[1,2])) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = ProductModel::find($id);
+        if (!$model) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        ProductModel::where('id',$id)->update(['isshow'=>$isshow]);
         $rstArr = [
             'error' =>  [
                 'code'  =>  0,

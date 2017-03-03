@@ -24,17 +24,12 @@ class LayerModel extends BaseModel
 //    ];
 
     /**
-     * 获得产品信息
+     * 获得产品名称
      */
-    public function getProduct()
-    {
-        $productModel = ProductModel::find($this->pro_id);
-        return $productModel ? $productModel : '';
-    }
-
     public function getProductName()
     {
-        return $this->getProduct() ? $this->getProduct()->name : '';
+        $productModel = ProductModel::find($this->pro_id);
+        return $productModel ? $productModel->name : '';
     }
 
     /**

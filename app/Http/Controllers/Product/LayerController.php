@@ -145,7 +145,6 @@ class LayerController extends BaseController
      */
     public function update()
     {
-        $uid = $_POST['uid'];
         $id = $_POST['id'];
         $name = $_POST['name'];
         $timelong = $_POST['timelong'];
@@ -166,7 +165,7 @@ class LayerController extends BaseController
         $img = $_POST['img'];
         $isbigbg = $_POST['isbigbg'];
         $bigbg = $_POST['bigbg'];
-        if (!$uid || !$id || !$name) {
+        if (!$id || !$name) {
             $rstArr = [
                 'error' =>  [
                     'code'  =>  -1,
@@ -175,7 +174,7 @@ class LayerController extends BaseController
             ];
             echo json_encode($rstArr);exit;
         }
-        $model = LayerModel::where('uid',$uid)->where('id',$id)->first();
+        $model = LayerModel::find($id);
         if (!$model) {
             $rstArr = [
                 'error' =>  [
@@ -185,11 +184,16 @@ class LayerController extends BaseController
             ];
             echo json_encode($rstArr);exit;
         }
-        $cons = [
-            'iscon' =>  $iscon,
-            'text'  =>  $text,
-            'img'   =>  $img,
-        ];
+        $cons = $model->con ? unserialize($model->con) : [];
+        if ($cons) {
+            $conArr = [
+                'iscon'     =>  $iscon,
+                'text'      =>  !$text ? $cons['text'] : $text,
+                'img'       =>  !$img ? $cons['img'] : $img,
+            ];
+        } else {
+            $conArr = '';
+        }
         $attrs = [
             'width' =>  $width,
             'height'    =>  $height,
@@ -201,6 +205,7 @@ class LayerController extends BaseController
             'bg'        =>  $bg,
             'iscolor'   =>  $iscolor,
             'color'     =>  $color,
+            'fontsize'  =>  $fontsize,
             'isbigbg'   =>  $isbigbg,
             'bigbg'   =>  $bigbg,
         ];
@@ -208,8 +213,8 @@ class LayerController extends BaseController
             'name' =>  $name,
             'timelong'  =>  $timelong,
             'delay'     =>  $delay,
-            'con'       =>  serialize($cons),
             'attr'      =>  serialize($attrs),
+            'con'       =>  $conArr ? serialize($conArr) : '',
             'updated_at'    =>  time(),
         ];
         LayerModel::where('id',$id)->update($data);
