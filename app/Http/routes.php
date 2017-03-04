@@ -45,6 +45,7 @@ $app->group(['prefix' => 'api/v1', 'namespace'=>'App\Http\Controllers'], functio
     $app->post('product/setlink', 'ProductController@setLink');
     $app->post('product/onebyuid', 'ProductController@getOneByUid');
     $app->post('product/setshow', 'ProductController@setShow');
+    $app->post('product/setattr', 'ProductController@setAttr');
     $app->post('product/deleteby2id', 'ProductController@forceDeleteBy2Id');
     $app->post('product/getmodel', 'ProductController@getModel');
     $app->post('product/preview', 'ProductController@getPreview');

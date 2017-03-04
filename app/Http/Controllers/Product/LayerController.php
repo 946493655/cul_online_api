@@ -184,16 +184,11 @@ class LayerController extends BaseController
             ];
             echo json_encode($rstArr);exit;
         }
-        $cons = $model->con ? unserialize($model->con) : [];
-        if ($cons) {
-            $conArr = [
-                'iscon'     =>  $iscon,
-                'text'      =>  !$text ? $cons['text'] : $text,
-                'img'       =>  !$img ? $cons['img'] : $img,
-            ];
-        } else {
-            $conArr = '';
-        }
+        $conArr = [
+            'iscon'     =>  $iscon,
+            'text'      =>  $text,
+            'img'       =>  $img,
+        ];
         $attrs = [
             'width' =>  $width,
             'height'    =>  $height,

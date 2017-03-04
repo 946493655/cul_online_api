@@ -185,7 +185,7 @@ class ProductController extends Controller
             'tempid'    =>  $tempid,
             'uid'       =>  $uid,
             'uname'     =>  $uname,
-            'thumb'     =>  $tempModel->thumb,
+//            'thumb'     =>  $tempModel->thumb,
             'linkType'  =>  $tempModel->linkType,
             'link'      =>  $tempModel->link,
             'created_at'    =>  $time,
@@ -419,6 +419,49 @@ class ProductController extends Controller
             'updated_at'    =>  time(),
         ];
         ProductModel::where('id',$id)->update($data);
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
+    /**
+     * 设置产品背景
+     */
+    public function setAttr()
+    {
+        $id = $_POST['id'];
+        $isbg = $_POST['isbg'];
+        $bgcolor = $_POST['bgcolor'];
+        $bgimg = $_POST['bgimg'];
+        if (!$id) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = ProductModel::find($id);
+        if (!$model) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $data = [
+            'isbg'  =>  $isbg,
+            'bgcolor'   =>  $bgcolor,
+            'bgimg'     =>  $bgimg,
+        ];
+        ProductModel::where('id',$id)->update(['attr'=>serialize($data)]);
         $rstArr = [
             'error' =>  [
                 'code'  =>  0,
