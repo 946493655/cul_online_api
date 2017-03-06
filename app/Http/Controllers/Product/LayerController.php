@@ -20,6 +20,7 @@ class LayerController extends BaseController
     public function index()
     {
         $pro_id = $_POST['pro_id'];
+        $isshow = $_POST['isshow'];
         if (!$pro_id) {
             $rstArr = [
                 'error' =>  [
@@ -30,7 +31,9 @@ class LayerController extends BaseController
             echo json_encode($rstArr);exit;
         }
 
+        $isshowArr = $isshow ? [$isshow] : [0,1,2];
         $models = LayerModel::where('pro_id',$pro_id)
+            ->whereIn('isshow',$isshowArr)
             ->orderBy('delay','asc')
             ->get();
         if (!count($models)) {
@@ -227,10 +230,9 @@ class LayerController extends BaseController
      */
     public function setIsShow()
     {
-        $uid = $_POST['uid'];
         $id = $_POST['id'];
         $isshow = $_POST['isshow'];
-        if (!$uid || !$id || !in_array($isshow,[1,2])) {
+        if (!$id || !in_array($isshow,[1,2])) {
             $rstArr = [
                 'error' =>  [
                     'code'  =>  -1,
@@ -239,7 +241,7 @@ class LayerController extends BaseController
             ];
             echo json_encode($rstArr);exit;
         }
-        $model = LayerModel::where('uid',$uid)->where('id',$id)->first();
+        $model = LayerModel::find($id);
         if (!$model) {
             $rstArr = [
                 'error' =>  [
@@ -268,9 +270,8 @@ class LayerController extends BaseController
      */
     public function forceDelete()
     {
-        $uid = $_POST['uid'];
         $id = $_POST['id'];
-        if (!$uid || !$id) {
+        if (!$id) {
             $rstArr = [
                 'error' =>  [
                     'code'  =>  -1,
@@ -279,7 +280,7 @@ class LayerController extends BaseController
             ];
             echo json_encode($rstArr);exit;
         }
-        $model = LayerModel::where('uid',$uid)->where('id',$id)->first();
+        $model = LayerModel::find($id);
         if (!$model) {
             $rstArr = [
                 'error' =>  [

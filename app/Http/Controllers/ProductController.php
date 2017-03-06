@@ -560,8 +560,8 @@ class ProductController extends Controller
             ];
             echo json_encode($rstArr);exit;
         }
+        $isShowArr = $isshow ? [$isshow] : [0,1,2];
         $model = ProductModel::find($id);
-        $isShowArr = $isshow ? [$isshow] : [1,2];
         $layerModels = ProLayerModel::where('pro_id',$id)
             ->whereIn('isshow',$isShowArr)
             ->get();

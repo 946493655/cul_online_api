@@ -100,6 +100,48 @@ class FrameController extends BaseController
         echo json_encode($rstArr);exit;
     }
 
+    public function update()
+    {
+        $id = $_POST['id'];
+        $attr = $_POST['attr'];
+        $per = $_POST['per'];
+        $val = $_POST['val'];
+        if (!$id || !$attr) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -1,
+                    'msg'   =>  '参数有误！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $model = FrameModel::where('id',$id)
+            ->where('attr',$attr)
+            ->first();
+        if (!$model) {
+            $rstArr = [
+                'error' =>  [
+                    'code'  =>  -2,
+                    'msg'   =>  '没有数据！',
+                ],
+            ];
+            echo json_encode($rstArr);exit;
+        }
+        $data = [
+            'per'   =>  $per,
+            'val'   =>  $val,
+            'updated_at'    =>  time(),
+        ];
+        FrameModel::where('id',$id)->update($data);
+        $rstArr = [
+            'error' =>  [
+                'code'  =>  0,
+                'msg'   =>  '操作成功！',
+            ],
+        ];
+        echo json_encode($rstArr);exit;
+    }
+
     /** 获取 model
      */
     public function getModel()
