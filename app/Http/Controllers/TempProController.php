@@ -73,7 +73,7 @@ class TempProController extends Controller
      */
     public function all()
     {
-        $models = TempProModel::where('isshow',2)->get();
+        $models = TempProModel::all();
         if (!count($models)) {
             $rstArr = [
                 'error' =>  [
